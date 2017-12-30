@@ -9,6 +9,7 @@ import "video-react/dist/video-react.css";
 import { Player } from 'video-react';
 import Background from './resources/image.jpg'
 import MediaQuery from 'react-responsive';
+import YouTube from 'react-youtube';
 
 function calcDiff() {
   return (Date.parse(new Date(2017, 11, 23, 9, 0, 0, 0)) - Date.parse(new Date())) / 1000;
@@ -44,21 +45,35 @@ class App extends Component {
   }
 
   handlePasswordChange(newVal) {
-    if(newVal === "passwordtesttest") {
+    if(newVal === "ucmroleahyvmabd") {
       this.setState({unlocked: true})
     }
   }
 
+  _onReady(event) {
+    // access to player in all event handlers via event.target
+    event.target.pauseVideo();
+  }
+
   render() {
     const { countCompleted, unlocked, countdown1 } = this.state;
+
+    const opts = {
+      height: '390',
+      width: '640',
+      playerVars: { // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    };
+
     return (
       <MuiThemeProvider>
-        <div className="App">
+        {!unlocked ? <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">WELCOME TO THE BEGINNING OF THE END</h1>
           </header>
-          {!unlocked ? <div>
+          <div>
             {!countCompleted ? <div style={{marginRight: 350}}><ReactCountdownClock
               seconds={countdown1}
               color="#000"
@@ -78,19 +93,20 @@ class App extends Component {
               onChange={(e, newVal) => this.handlePasswordChange(newVal)}
             /> : null}
           </div>
-            : 
-              <Player>
-                <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
-              </Player>}
           <div>
             <MediaQuery minDeviceWidth={1224}>
               <img style={{overflow: 'hidden'}} src={Background}/>
             </MediaQuery>
           </div>
-        </div>
+        </div>:            
+          <YouTube
+            videoId="Ym21IKxU92U"
+            opts={opts}
+            onReady={this._onReady}
+          />}
       </MuiThemeProvider>
     );
   }
 }
-
+//<source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
 export default App;
